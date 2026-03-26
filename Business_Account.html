@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Dashboard | FlavorHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+     
+    ### CSS ###  
+     * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f7f9fc;
+            color: #1e2a3e;
+            line-height: 1.4;
+        }
+
+        .app-wrapper {
+            max-width: 1280px;
+            margin: 0 auto;
+            background: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* Header Navigation */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e9edf2;
+            background: white;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logo-icon {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #d63e2e, #f47b4a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo-text {
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: #2c3e4e;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #3a546d;
+            transition: 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: #d63e2e;
+        }
+
+        .logout-btn {
+            background: #1e2a3e;
+            color: white !important;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            flex: 1.2;
+            min-width: 240px;
+        }
+
+        .business-section {
+            margin-bottom: 2rem;
+            padding-left: 0.8rem;
+            border-left: 4px solid #f47b4a;
+        }
+
+        .business-section h2 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #1f2e3a;
+        }
+
+        .business-badge {
+            font-size: 0.85rem;
+            color: #5e7b9c;
+            margin-top: 4px;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.7rem 1rem;
+            border-radius: 16px;
+            font-weight: 500;
+            color: #2c4c6e;
+            transition: 0.2s;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .nav-item i {
+            font-style: normal;
+            font-weight: 500;
+            font-size: 1.2rem;
+            width: 28px;
+        }
+
+        .nav-item.active {
+            background: #fef2e8;
+            color: #d63e2e;
+            font-weight: 600;
+        }
+
+        .nav-item:not(.active):hover {
+            background: #f5f7fb;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 3;
+            background: #fefefe;
+            border-radius: 32px;
+            padding: 1.5rem;
+            border: 1px solid #eff2f8;
+        }
+
+        .section-title {
+            font-size: 1.7rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #f47b4a;
+            padding-left: 1rem;
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1.5rem;
+            border-radius: 20px;
+            color: white;
+        }
+
+        .stat-card.high {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .stat-card.low {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Inventory Table */
+        .inventory-table {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #eef2f8;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c4c6e;
+        }
+
+        .low-stock {
+            color: #d63e2e;
+            font-weight: 600;
+        }
+
+        .btn-small {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        .btn-edit {
+            color: #2196f3;
+        }
+
+        .btn-delete {
+            color: #f44336;
+        }
+
+        .btn-add {
+            background: #1e2a3e;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+
+        /* Order Cards */
+        .order-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #eef2f8;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-id {
+            font-weight: 700;
+            color: #d63e2e;
+        }
+
+        .order-status {
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-delivered {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-in-progress {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .status-pending {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .status-preparing {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        select {
+            padding: 0.25rem;
+            border-radius: 8px;
+            border: 1px solid #cfdfed;
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .flash {
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .flash.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .flash.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* CSS-only tab switching */
+        .section-toggle {
+            display: none;
+        }
+
+        .section {
+            display: none;
+        }
+
+        #toggle-stock:checked ~ .dashboard #stock-section,
+        #toggle-orders:checked ~ .dashboard #orders-section,
+        #toggle-past-orders:checked ~ .dashboard #past-orders-section,
+        #toggle-manage:checked ~ .dashboard #manage-section {
+            display: block;
+        }
+
+        #toggle-stock:checked ~ .dashboard .sidebar label[for="toggle-stock"],
+        #toggle-orders:checked ~ .dashboard .sidebar label[for="toggle-orders"],
+        #toggle-past-orders:checked ~ .dashboard .sidebar label[for="toggle-past-orders"],
+        #toggle-manage:checked ~ .dashboard .sidebar label[for="toggle-manage"] {
+            background: #fef2e8;
+            color: #d63e2e;
+            font-weight: 600;
+        }
+
+        .sidebar .nav-item {
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+        }
+
+        .action-buttons {
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary {
+            background: #1e2a3e;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+        }
+
+### HTML ###
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Header Navigation -->
+    <div class="navbar">
+        <div class="logo-area">
+            <span class="logo-icon">✦</span>
+            <span class="logo-text">FlavorHub Business</span>
+        </div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Our Story</a>
+            <a href="#">Account</a>
+            <a href="#">Business</a>
+            <a href="#">Account</a>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <!-- Hidden radio buttons for CSS-only tab switching -->
+    <input type="radio" name="section" id="toggle-stock" class="section-toggle" checked>
+    <input type="radio" name="section" id="toggle-orders" class="section-toggle">
+    <input type="radio" name="section" id="toggle-past-orders" class="section-toggle">
+    <input type="radio" name="section" id="toggle-manage" class="section-toggle">
+
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="business-section">
+                <h2>Business Name</h2>
+                <div class="business-badge">🏪 FlavorHub Restaurant</div>
+            </div>
+            <div class="nav-menu">
+                <label for="toggle-stock" class="nav-item">
+                    <i>📊</i> Stock Levels
+                </label>
+                <label for="toggle-orders" class="nav-item">
+                    <i>📋</i> Orders
+                </label>
+                <label for="toggle-past-orders" class="nav-item">
+                    <i>✅</i> Past Orders
+                </label>
+                <label for="toggle-manage" class="nav-item">
+                    <i>⚙️</i> Manage Stock
+                </label>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Stock Levels Section -->
+            <div id="stock-section" class="section">
+                <h2 class="section-title">📊 Stock Levels</h2>
+                
+                <div class="stats-container">
+                    <div class="stat-card high">
+                        <div class="stat-number">{{ high_stock }}</div>
+                        <div class="stat-label">High Stock Items</div>
+                    </div>
+                    <div class="stat-card low">
+                        <div class="stat-number">{{ low_stock }}</div>
+                        <div class="stat-label">Low Stock Items</div>
+                    </div>
+                </div>
+
+                <div class="inventory-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Quantity</th>
+                                <th>Unit</th>
+                                <th>Reorder Level</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in inventory %}
+                            <tr>
+                                <td>{{ item.product_name }}</td>
+                                <td>{{ item.category }}</td>
+                                <td {% if item.quantity <= item.reorder_level %}class="low-stock"{% endif %}>
+                                    {{ item.quantity }}
+                                </td>
+                                <td>{{ item.unit }}</td>
+                                <td>{{ item.reorder_level }}</td>
+                                <td>${{ "%.2f"|format(item.price) }}</td>
+                                <td>
+                                    {% if item.quantity <= item.reorder_level %}
+                                        ⚠️ Low Stock
+                                    {% else %}
+                                        ✓ In Stock
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Orders Section (Active Orders) -->
+            <div id="orders-section" class="section">
+                <h2 class="section-title">📋 Active Orders</h2>
+                
+                {% set active_orders = orders|selectattr("status", "ne", "Delivered")|list %}
+                {% if active_orders %}
+                    {% for order in active_orders %}
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="order-id">#{{ order.order_number }}</span>
+                            <span class="order-date">{{ order.order_date }}</span>
+                        </div>
+                        <div><strong>Customer:</strong> {{ order.customer_name }}</div>
+                        <div><strong>Items:</strong> {{ order.items }}</div>
+                        <div><strong>Total:</strong> ${{ "%.2f"|format(order.total) }}</div>
+                        <div><strong>Address:</strong> {{ order.delivery_address }}</div>
+                        <div style="margin-top: 0.5rem;">
+                            <form method="POST" action="{{ url_for('update_order_status', order_id=order.id) }}" style="display: inline;">
+                                <select name="status" onchange="this.form.submit()">
+                                    <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                    <option value="Preparing" {% if order.status == 'Preparing' %}selected{% endif %}>Preparing</option>
+                                    <option value="In Progress" {% if order.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                    <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                </select>
+                            </form>
+                            <span class="order-status status-{{ order.status|lower|replace(' ', '-') }}">
+                                {{ order.status }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No active orders at the moment.</p>
+                {% endif %}
+            </div>
+
+            <!-- Past Orders Section -->
+            <div id="past-orders-section" class="section">
+                <h2 class="section-title">✅ Past Orders</h2>
+                
+                {% set delivered_orders = orders|selectattr("status", "eq", "Delivered")|list %}
+                {% if delivered_orders %}
+                    {% for order in delivered_orders %}
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="order-id">#{{ order.order_number }}</span>
+                            <span class="order-date">{{ order.order_date }}</span>
+                        </div>
+                        <div><strong>Customer:</strong> {{ order.customer_name }}</div>
+                        <div><strong>Items:</strong> {{ order.items }}</div>
+                        <div><strong>Total:</strong> ${{ "%.2f"|format(order.total) }}</div>
+                        <div><strong>Payment:</strong> {{ order.payment_status }}</div>
+                        <div style="margin-top: 0.5rem;">
+                            <span class="order-status status-delivered">Delivered</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No past orders yet.</p>
+                {% endif %}
+            </div>
+
+            <!-- Manage Stock Section -->
+            <div id="manage-section" class="section">
+                <h2 class="section-title">⚙️ Manage Stock</h2>
+                
+                <div class="action-buttons">
+                    <a href="{{ url_for('add_stock') }}" class="btn-primary">+ Add Stock</a>
+                </div>
+
+                <div class="inventory-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Quantity</th>
+                                <th>Unit</th>
+                                <th>Price</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in inventory %}
+                            <tr>
+                                <td>{{ item.product_name }}</td>
+                                <td>{{ item.category }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.unit }}</td>
+                                <td>${{ "%.2f"|format(item.price) }}</td>
+                                <td>
+                                    <a href="{{ url_for('edit_stock', item_id=item.id) }}" class="btn-small btn-edit">✏️ Edit</a>
+                                    <form method="POST" action="{{ url_for('remove_stock', item_id=item.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to remove this item?')">
+                                        <button type="submit" class="btn-small btn-delete">🗑️ Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-hide flash messages after 3 seconds
+    setTimeout(() => {
+        const flashes = document.querySelectorAll('.flash');
+        flashes.forEach(flash => {
+            flash.style.opacity = '0';
+            setTimeout(() => flash.remove(), 300);
+        });
+    }, 3000);
+
+
+    ### Flask ###
+
+    from flask import Flask, render_template, request, redirect, url_for, session, flash
+import sqlite3
+from datetime import datetime
+import json
+
+app = Flask(__name__)
+app.secret_key = 'your-secret-key-here-change-in-production'
+
+# Database helper functions
+def get_db():
+    """Get database connection"""
+    conn = sqlite3.connect('GreenField.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    """Initialize the database with all tables"""
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    # Create users table (customers)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            password TEXT NOT NULL,
+            loyalty_stamps INTEGER DEFAULT 0,
+            member_since TEXT NOT NULL
+        )
+    ''')
+    
+    # Create orders table (customer orders)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS orders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            order_number TEXT UNIQUE NOT NULL,
+            user_id INTEGER NOT NULL,
+            order_date TEXT NOT NULL,
+            items TEXT NOT NULL,
+            total TEXT NOT NULL,
+            status TEXT NOT NULL,
+            delivery_time TEXT,
+            order_type TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users (id)
+        )
+    ''')
+    
+    # Create business inventory table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS inventory (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            product_name TEXT NOT NULL,
+            category TEXT NOT NULL,
+            quantity INTEGER NOT NULL,
+            unit TEXT NOT NULL,
+            reorder_level INTEGER DEFAULT 10,
+            price REAL NOT NULL,
+            last_updated TEXT NOT NULL
+        )
+    ''')
+    
+    # Create business orders table (orders received by business)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS business_orders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            order_number TEXT UNIQUE NOT NULL,
+            customer_name TEXT NOT NULL,
+            order_date TEXT NOT NULL,
+            items TEXT NOT NULL,
+            total REAL NOT NULL,
+            status TEXT NOT NULL,
+            delivery_address TEXT NOT NULL,
+            payment_status TEXT NOT NULL
+        )
+    ''')
+    
+    # Insert sample inventory data if empty
+    cursor.execute("SELECT COUNT(*) as count FROM inventory")
+    if cursor.fetchone()['count'] == 0:
+        sample_inventory = [
+            ('Margherita Pizza', 'Food', 25, 'pcs', 10, 12.99, datetime.now().strftime('%Y-%m-%d')),
+            ('Pepperoni Pizza', 'Food', 18, 'pcs', 10, 14.99, datetime.now().strftime('%Y-%m-%d')),
+            ('Caesar Salad', 'Food', 32, 'bowls', 15, 8.99, datetime.now().strftime('%Y-%m-%d')),
+            ('Garlic Bread', 'Sides', 45, 'portions', 20, 4.99, datetime.now().strftime('%Y-%m-%d')),
+            ('Coca Cola', 'Beverages', 120, 'cans', 30, 2.50, datetime.now().strftime('%Y-%m-%d')),
+            ('French Fries', 'Sides', 8, 'portions', 15, 3.99, datetime.now().strftime('%Y-%m-%d')),
+            ('Chicken Wings', 'Appetizers', 3, 'dozen', 10, 11.99, datetime.now().strftime('%Y-%m-%d')),
+            ('Cheesecake', 'Desserts', 12, 'slices', 8, 6.99, datetime.now().strftime('%Y-%m-%d')),
+            ('Iced Tea', 'Beverages', 55, 'glasses', 20, 3.50, datetime.now().strftime('%Y-%m-%d')),
+            ('Vegan Burger', 'Food', 6, 'pcs', 8, 13.99, datetime.now().strftime('%Y-%m-%d'))
+        ]
+        
+        for item in sample_inventory:
+            cursor.execute('''
+                INSERT INTO inventory (product_name, category, quantity, unit, reorder_level, price, last_updated)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            ''', item)
+    
+    # Insert sample business orders if empty
+    cursor.execute("SELECT COUNT(*) as count FROM business_orders")
+    if cursor.fetchone()['count'] == 0:
+        sample_orders = [
+            ('ORD-1001', 'Sarah Johnson', '2026-03-20', '2x Margherita Pizza, 1x Caesar Salad', 34.97, 'Delivered', '123 Main St, NY', 'Paid'),
+            ('ORD-1002', 'Mike Thompson', '2026-03-21', '1x Pepperoni Pizza, 2x Coca Cola', 19.99, 'Delivered', '456 Oak Ave, NY', 'Paid'),
+            ('ORD-1003', 'Emma Davis', '2026-03-22', '3x Chicken Wings, 2x French Fries', 41.95, 'In Progress', '789 Pine St, NY', 'Paid'),
+            ('ORD-1004', 'James Wilson', '2026-03-23', '1x Vegan Burger, 1x Iced Tea', 17.49, 'Pending', '321 Elm St, NY', 'Pending'),
+            ('ORD-1005', 'Lisa Brown', '2026-03-24', '2x Cheesecake, 1x Garlic Bread', 18.97, 'Preparing', '654 Maple Dr, NY', 'Paid'),
+            ('ORD-1006', 'David Lee', '2026-03-25', '1x Pepperoni Pizza, 1x French Fries, 1x Coca Cola', 21.48, 'Pending', '987 Cedar Ln, NY', 'Pending'),
+            ('ORD-1007', 'Maria Garcia', '2026-03-26', '2x Caesar Salad, 2x Iced Tea', 24.98, 'Delivered', '147 Birch Rd, NY', 'Paid'),
+        ]
+        
+        for order in sample_orders:
+            cursor.execute('''
+                INSERT INTO business_orders (order_number, customer_name, order_date, items, total, status, delivery_address, payment_status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', order)
+    
+    # Insert sample user if empty (for demo)
+    cursor.execute("SELECT COUNT(*) as count FROM users")
+    if cursor.fetchone()['count'] == 0:
+        cursor.execute('''
+            INSERT INTO users (username, name, email, password, loyalty_stamps, member_since)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', ('sarah.johnson', 'Sarah Johnson', 'sarah@example.com', 'password123', 7, '2024'))
+        
+        user_id = cursor.lastrowid
+        
+        # Insert sample customer orders
+        past_orders = [
+            ('ORD-3842', user_id, 'March 20, 2026', 'Margherita Pizza • Caesar Salad • Sparkling Water', '$42.50', 'Delivered', None, 'past'),
+            ('ORD-3791', user_id, 'March 15, 2026', 'Classic Burger (2) • Sweet Potato Fries • Vanilla Milkshake', '$38.75', 'Delivered', None, 'past'),
+            ('ORD-3654', user_id, 'March 10, 2026', 'Sushi Roll Set • Miso Soup • Green Tea', '$55.20', 'Delivered', None, 'past'),
+        ]
+        
+        for order in past_orders:
+            cursor.execute('''
+                INSERT INTO orders (order_number, user_id, order_date, items, total, status, delivery_time, order_type)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', order)
+        
+        upcoming_orders = [
+            ('ORD-4012', user_id, 'March 28, 2026', 'Family Feast Combo (Serves 4) • 4 Drinks • Dessert Platter', '$89.99', 'Confirmed', '7:00 PM', 'upcoming'),
+            ('ORD-4033', user_id, 'April 5, 2026', 'Birthday Cake Special • Appetizers Platter • Sparkling Cider', '$65.50', 'Pending', '6:30 PM', 'upcoming'),
+        ]
+        
+        for order in upcoming_orders:
+            cursor.execute('''
+                INSERT INTO orders (order_number, user_id, order_date, items, total, status, delivery_time, order_type)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', order)
+    
+    conn.commit()
+    conn.close()
+
+# Initialize database
+init_db()
+
+@app.route('/')
+def index():
+    """Home page"""
+    return render_template('index.html')
+
+@app.route('/business')
+def business_dashboard():
+    """Business dashboard with inventory and order management"""
+    conn = get_db()
+    
+    # Get all inventory items
+    inventory = conn.execute('SELECT * FROM inventory ORDER BY category, product_name').fetchall()
+    
+    # Get stock level counts
+    high_stock = conn.execute('SELECT COUNT(*) as count FROM inventory WHERE quantity > reorder_level').fetchone()
+    low_stock = conn.execute('SELECT COUNT(*) as count FROM inventory WHERE quantity <= reorder_level').fetchone()
+    
+    # Get all business orders
+    orders = conn.execute('SELECT * FROM business_orders ORDER BY order_date DESC').fetchall()
+    
+    conn.close()
+    
+    return render_template('business_dashboard.html', 
+                         inventory=inventory,
+                         high_stock=high_stock['count'],
+                         low_stock=low_stock['count'],
+                         orders=orders)
+
+@app.route('/business/add_stock', methods=['GET', 'POST'])
+def add_stock():
+    """Add new stock item"""
+    if request.method == 'POST':
+        product_name = request.form.get('product_name')
+        category = request.form.get('category')
+        quantity = int(request.form.get('quantity'))
+        unit = request.form.get('unit')
+        reorder_level = int(request.form.get('reorder_level'))
+        price = float(request.form.get('price'))
+        
+        conn = get_db()
+        conn.execute('''
+            INSERT INTO inventory (product_name, category, quantity, unit, reorder_level, price, last_updated)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (product_name, category, quantity, unit, reorder_level, price, datetime.now().strftime('%Y-%m-%d')))
+        conn.commit()
+        conn.close()
+        
+        flash(f'{product_name} added successfully!', 'success')
+        return redirect(url_for('business_dashboard'))
+    
+    return render_template('add_stock.html')
+
+@app.route('/business/edit_stock/<int:item_id>', methods=['GET', 'POST'])
+def edit_stock(item_id):
+    """Edit existing stock item"""
+    conn = get_db()
+    
+    if request.method == 'POST':
+        product_name = request.form.get('product_name')
+        category = request.form.get('category')
+        quantity = int(request.form.get('quantity'))
+        unit = request.form.get('unit')
+        reorder_level = int(request.form.get('reorder_level'))
+        price = float(request.form.get('price'))
+        
+        conn.execute('''
+            UPDATE inventory 
+            SET product_name = ?, category = ?, quantity = ?, unit = ?, reorder_level = ?, price = ?, last_updated = ?
+            WHERE id = ?
+        ''', (product_name, category, quantity, unit, reorder_level, price, datetime.now().strftime('%Y-%m-%d'), item_id))
+        conn.commit()
+        conn.close()
+        
+        flash('Stock item updated successfully!', 'success')
+        return redirect(url_for('business_dashboard'))
+    
+    # GET request - show edit form
+    item = conn.execute('SELECT * FROM inventory WHERE id = ?', (item_id,)).fetchone()
+    conn.close()
+    
+    if not item:
+        flash('Item not found', 'error')
+        return redirect(url_for('business_dashboard'))
+    
+    return render_template('edit_stock.html', item=item)
+
+@app.route('/business/remove_stock/<int:item_id>', methods=['POST'])
+def remove_stock(item_id):
+    """Remove stock item"""
+    conn = get_db()
+    
+    # Get item name for flash message
+    item = conn.execute('SELECT product_name FROM inventory WHERE id = ?', (item_id,)).fetchone()
+    
+    if item:
+        conn.execute('DELETE FROM inventory WHERE id = ?', (item_id,))
+        conn.commit()
+        flash(f'{item["product_name"]} removed from inventory', 'success')
+    else:
+        flash('Item not found', 'error')
+    
+    conn.close()
+    return redirect(url_for('business_dashboard'))
+
+@app.route('/business/update_order_status/<int:order_id>', methods=['POST'])
+def update_order_status(order_id):
+    """Update business order status"""
+    status = request.form.get('status')
+    
+    conn = get_db()
+    conn.execute('UPDATE business_orders SET status = ? WHERE id = ?', (status, order_id))
+    conn.commit()
+    conn.close()
+    
+    flash('Order status updated successfully!', 'success')
+    return redirect(url_for('business_dashboard'))
+
+@app.route('/business/past_orders')
+def past_orders():
+    """View past/completed orders"""
+    conn = get_db()
+    past_orders = conn.execute('''
+        SELECT * FROM business_orders 
+        WHERE status = 'Delivered' 
+        ORDER BY order_date DESC
+    ''').fetchall()
+    conn.close()
+    
+    return render_template('past_orders.html', orders=past_orders)
+
+@app.route('/account')
+def account():
+    """Customer account page"""
+    user_id = 1  # Default user for demo
+    
+    conn = get_db()
+    user = conn.execute('SELECT * FROM users WHERE id = ?', (user_id,)).fetchone()
+    past_orders = conn.execute('SELECT * FROM orders WHERE user_id = ? AND order_type = "past"', (user_id,)).fetchall()
+    upcoming_orders = conn.execute('SELECT * FROM orders WHERE user_id = ? AND order_type = "upcoming"', (user_id,)).fetchall()
+    conn.close()
+    
+    return render_template('account.html', 
+                         user=user, 
+                         past_orders=past_orders, 
+                         upcoming_orders=upcoming_orders)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """Login page"""
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        conn = get_db()
+        user = conn.execute('SELECT * FROM users WHERE username = ? AND password = ?', (username, password)).fetchone()
+        conn.close()
+        
+        if user:
+            session['user_id'] = user['id']
+            session['user_type'] = 'customer'
+            flash('Login successful!', 'success')
+            return redirect(url_for('account'))
+        elif username == 'admin' and password == 'admin123':
+            # Simple admin login for business dashboard
+            session['user_type'] = 'business'
+            flash('Welcome to Business Dashboard!', 'success')
+            return redirect(url_for('business_dashboard'))
+        else:
+            flash('Invalid username or password', 'error')
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    """Logout user"""
+    session.clear()
+    flash('You have been logged out', 'info')
+    return redirect(url_for('login'))
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
